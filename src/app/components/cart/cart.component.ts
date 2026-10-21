@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CartItem } from '../../models/cartItems';
 
 @Component({
-  selector: 'app-cart',
+  selector: 'cart',
   imports: [],
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
 })
 export class CartComponent {
-
+  @Input() items: CartItem[] = [];
 }
