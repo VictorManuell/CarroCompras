@@ -1,9 +1,16 @@
 <h2>Catalogo de productos App!!</h2>
 
-<catalogo [products]="products" (productEventEmitter)="onAddCart($event)"></catalogo>
+<catalogo
+  [products]="products"
+  (productEventEmitter)="onAddCart($event)"
+></catalogo>
 
 @if (items.length > 0) {
-  <cart [items]="items" (idProductEventEmitter)="onDeleteCart($event)"></cart>
+  <cart
+    [items]="items"
+    [total]="total"
+    (idProductEventEmitter)="onDeleteCart($event)"
+  ></cart>
 } @else {
   <div class="alert alert-warning">
     No existen elementos en el carro de compras
