@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartItem } from '../../models/cartItems';
+import { Product } from '../../models/product';
 
 @Component({
   selector: 'cart',
@@ -8,4 +9,10 @@ import { CartItem } from '../../models/cartItems';
 })
 export class CartComponent {
   @Input() items: CartItem[] = [];
+
+  @Output() idProductEventEmitter = new EventEmitter();
+
+  onDeleteCart(id: number) {
+    this.idProductEventEmitter.emit(id);
+  }
 }

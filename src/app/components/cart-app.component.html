@@ -3,7 +3,7 @@
 <catalogo [products]="products" (productEventEmitter)="onAddCart($event)"></catalogo>
 
 @if (items.length > 0) {
-  <cart [items]="items"></cart>
+  <cart [items]="items" (idProductEventEmitter)="onDeleteCart($event)"></cart>
 } @else {
   <div class="alert alert-warning">
     No existen elementos en el carro de compras

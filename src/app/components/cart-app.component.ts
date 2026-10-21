@@ -4,6 +4,7 @@ import { Product } from '../models/product';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { CartComponent } from './cart/cart.component';
 import { CartItem } from '../models/cartItems';
+import { product } from '../data/product.data';
 
 @Component({
   selector: 'cart-app',
@@ -36,5 +37,11 @@ export class CartAppComponent implements OnInit {
     } else {
       this.items = [...this.items, { product: { ...product }, quantity: 1 }];
     }
+  }
+
+  onDeleteCart(id: number): void {
+    this.items = this.items.filter((item) => {
+      item.product.id !== id;
+    });
   }
 }
