@@ -5,10 +5,11 @@ import { CatalogoComponent } from './catalogo/catalogo.component';
 import { CartComponent } from './cart/cart.component';
 import { CartItem } from '../models/cartItems';
 import { product } from '../data/product.data';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogoComponent, CartComponent],
+  imports: [CatalogoComponent, CartComponent, CommonModule],
   templateUrl: './cart-app.component.html',
 })
 export class CartAppComponent implements OnInit {
@@ -17,11 +18,13 @@ export class CartAppComponent implements OnInit {
   items: CartItem[] = [];
 
   total: number = 0;
+  showCart: boolean = false; //variable para controlar si mostramos u ocultamos la vista del carro de compras
 
   constructor(private service: ProductService) {}
 
   ngOnInit(): void {
     this.products = this.service.findAll();
+    this.items = JSON.parse(sessionStorage.getItem('cart')!) || [];
     this.calculateTotal();
   }
 
@@ -41,11 +44,13 @@ export class CartAppComponent implements OnInit {
       this.items = [...this.items, { product: { ...product }, quantity: 1 }];
     }
     this.calculateTotal();
+    this.saveSession();
   }
 
   onDeleteCart(id: number): void {
     this.items = this.items.filter((item) => item.product.id !== id);
     this.calculateTotal();
+    this.saveSession();
   }
 
   calculateTotal(): void {
@@ -53,5 +58,16 @@ export class CartAppComponent implements OnInit {
       (accumulator, item) => accumulator + item.quantity * item.product.price,
       0,
     );
+  }
+
+  //se guarda en sessionSotorage metodo ya nativo
+  saveSession(): void {
+    //recordar parsear por que solo aseptra string o texto plano
+    sessionStorage.setItem('cart', JSON.stringify(this.items));
+  }
+
+  //metodo de vista de el componente de carro de compras
+  openCart(): void {
+    this.showCart = !this.showCart;
   }
 }
