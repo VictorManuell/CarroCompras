@@ -6,10 +6,11 @@ import { CartComponent } from './cart/cart.component';
 import { CartItem } from '../models/cartItems';
 import { product } from '../data/product.data';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogoComponent, CartComponent, CommonModule],
+  imports: [CatalogoComponent, CartComponent, NavbarComponent, CommonModule],
   templateUrl: './cart-app.component.html',
 })
 export class CartAppComponent implements OnInit {
@@ -24,7 +25,7 @@ export class CartAppComponent implements OnInit {
 
   ngOnInit(): void {
     this.products = this.service.findAll();
-    this.items = JSON.parse(sessionStorage.getItem('cart')!) || [];
+    this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
     this.calculateTotal();
   }
 
