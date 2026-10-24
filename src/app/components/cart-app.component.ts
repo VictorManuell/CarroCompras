@@ -1,16 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { Product } from '../models/product';
 import { CatalogoComponent } from './catalogo/catalogo.component';
-import { CartComponent } from './cart/cart.component';
 import { CartItem } from '../models/cartItems';
-import { product } from '../data/product.data';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
+import { CartModalComponent } from './cart-modal/cart-modal.component';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogoComponent, CartComponent, NavbarComponent, CommonModule],
+  imports: [
+    CatalogoComponent,
+    CartModalComponent,
+    NavbarComponent,
+    CommonModule,
+  ],
   templateUrl: './cart-app.component.html',
 })
 export class CartAppComponent implements OnInit {
@@ -68,7 +72,7 @@ export class CartAppComponent implements OnInit {
   }
 
   //metodo de vista de el componente de carro de compras
-  openCart(): void {
+  closeCart(): void {
     this.showCart = !this.showCart;
   }
 }
