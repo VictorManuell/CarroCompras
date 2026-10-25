@@ -22,7 +22,7 @@ export class CartAppComponent implements OnInit {
 
   items: CartItem[] = [];
 
-  total: number = 0;
+  /*  total: number = 0; */
   showCart: boolean = false; //variable para controlar si mostramos u ocultamos la vista del carro de compras
 
   constructor(private service: ProductService) {}
@@ -30,7 +30,7 @@ export class CartAppComponent implements OnInit {
   ngOnInit(): void {
     this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    this.calculateTotal();
+    // this.calculateTotal();
   }
 
   onAddCart(product: Product) {
@@ -48,17 +48,21 @@ export class CartAppComponent implements OnInit {
     } else {
       this.items = [...this.items, { product: { ...product }, quantity: 1 }];
     }
-    this.calculateTotal();
-    this.saveSession();
+    /*  this.calculateTotal();
+    this.saveSession(); */
   }
 
   onDeleteCart(id: number): void {
     this.items = this.items.filter((item) => item.product.id !== id);
-    this.calculateTotal();
-    this.saveSession();
+    if (this.items.length == 0) {
+      sessionStorage.removeItem('cart');
+      sessionStorage.clear();
+    }
+    /*  this.calculateTotal();
+    this.saveSession(); */
   }
 
-  calculateTotal(): void {
+  /*   calculateTotal(): void {
     this.total = this.items.reduce(
       (accumulator, item) => accumulator + item.quantity * item.product.price,
       0,
@@ -69,7 +73,7 @@ export class CartAppComponent implements OnInit {
   saveSession(): void {
     //recordar parsear por que solo aseptra string o texto plano
     sessionStorage.setItem('cart', JSON.stringify(this.items));
-  }
+  } */
 
   //metodo de vista de el componente de carro de compras
   closeCart(): void {

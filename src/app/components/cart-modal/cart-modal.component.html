@@ -18,7 +18,6 @@
           @if (items.length > 0) {
             <cart
               [items]="items"
-              [total]="total"
               (idProductEventEmitter)="onDeleteCart($event)"
             ></cart>
           } @else {
