@@ -5,16 +5,11 @@ import { CatalogoComponent } from './catalogo/catalogo.component';
 import { CartItem } from '../models/cartItems';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
-import { CartModalComponent } from './cart-modal/cart-modal.component';
-
+import { RouterOutlet } from '@angular/router';
+import { SharingDataService } from '../services/sharing-data.service';
 @Component({
   selector: 'cart-app',
-  imports: [
-    CatalogoComponent,
-    CartModalComponent,
-    NavbarComponent,
-    CommonModule,
-  ],
+  imports: [NavbarComponent, CommonModule, RouterOutlet],
   templateUrl: './cart-app.component.html',
 })
 export class CartAppComponent implements OnInit {
@@ -22,47 +17,58 @@ export class CartAppComponent implements OnInit {
 
   items: CartItem[] = [];
 
-  /*  total: number = 0; */
+  total: number = 0;
   showCart: boolean = false; //variable para controlar si mostramos u ocultamos la vista del carro de compras
 
-  constructor(private service: ProductService) {}
+  constructor(
+    private sharingDataService: SharingDataService,
+    private service: ProductService,
+  ) {}
 
   ngOnInit(): void {
     this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    // this.calculateTotal();
+    this.calculateTotal();
+    this.onDeleteCart();
+    this.onAddCart();
   }
 
-  onAddCart(product: Product) {
-    const hasItem = this.items.find((item) => item.product.id === product.id);
-    if (hasItem) {
-      this.items = this.items.map((item) => {
-        if (item.product.id === product.id) {
-          return {
-            ...item,
-            quantity: item.quantity + 1,
-          };
-        }
-        return item;
-      });
-    } else {
-      this.items = [...this.items, { product: { ...product }, quantity: 1 }];
-    }
-    /*  this.calculateTotal();
-    this.saveSession(); */
+  onAddCart() {
+    this.sharingDataService.productEventEmitter.subscribe((product) => {
+      const hasItem = this.items.find((item) => item.product.id === product.id);
+      if (hasItem) {
+        this.items = this.items.map((item) => {
+          if (item.product.id === product.id) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+            };
+          }
+          return item;
+        });
+      } else {
+        this.items = [...this.items, { product: { ...product }, quantity: 1 }];
+      }
+      this.calculateTotal();
+      this.saveSession();
+    });
   }
 
-  onDeleteCart(id: number): void {
-    this.items = this.items.filter((item) => item.product.id !== id);
-    if (this.items.length == 0) {
-      sessionStorage.removeItem('cart');
-      sessionStorage.clear();
-    }
-    /*  this.calculateTotal();
-    this.saveSession(); */
+  onDeleteCart(): void {
+    this.sharingDataService.idProductEventEmitter.subscribe((id) => {
+      console.log(id + ' Se a Ejecutado el evento idProductEventEmitter');
+
+      this.items = this.items.filter((item) => item.product.id !== id);
+      if (this.items.length == 0) {
+        sessionStorage.removeItem('cart');
+        sessionStorage.clear();
+      }
+      this.calculateTotal();
+      this.saveSession();
+    });
   }
 
-  /*   calculateTotal(): void {
+  calculateTotal(): void {
     this.total = this.items.reduce(
       (accumulator, item) => accumulator + item.quantity * item.product.price,
       0,
@@ -73,7 +79,7 @@ export class CartAppComponent implements OnInit {
   saveSession(): void {
     //recordar parsear por que solo aseptra string o texto plano
     sessionStorage.setItem('cart', JSON.stringify(this.items));
-  } */
+  }
 
   //metodo de vista de el componente de carro de compras
   closeCart(): void {
