@@ -1,32 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
-import { Product } from '../models/product';
-import { CatalogoComponent } from './catalogo/catalogo.component';
 import { CartItem } from '../models/cartItems';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { SharingDataService } from '../services/sharing-data.service';
 @Component({
   selector: 'cart-app',
+  standalone: true,
   imports: [NavbarComponent, CommonModule, RouterOutlet],
   templateUrl: './cart-app.component.html',
 })
 export class CartAppComponent implements OnInit {
-  products: Product[] = [];
-
   items: CartItem[] = [];
 
   total: number = 0;
   showCart: boolean = false; //variable para controlar si mostramos u ocultamos la vista del carro de compras
 
   constructor(
+    private router: Router,
     private sharingDataService: SharingDataService,
     private service: ProductService,
   ) {}
 
   ngOnInit(): void {
-    this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
     this.calculateTotal();
     this.onDeleteCart();
@@ -51,6 +48,9 @@ export class CartAppComponent implements OnInit {
       }
       this.calculateTotal();
       this.saveSession();
+      this.router.navigate(['/cart'], {
+        state: { items: this.items, total: this.total },
+      });
     });
   }
 
@@ -65,6 +65,11 @@ export class CartAppComponent implements OnInit {
       }
       this.calculateTotal();
       this.saveSession();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/cart'], {
+          state: { items: this.items, total: this.total },
+        });
+      });
     });
   }
 
