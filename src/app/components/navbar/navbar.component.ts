@@ -9,5 +9,4 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent {
   @Input() items: CartItem[] = [];
-  @Input() total: number = 0;
 }

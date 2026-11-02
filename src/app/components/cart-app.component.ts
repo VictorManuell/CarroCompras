@@ -18,7 +18,6 @@ import { add, remove, total } from '../store/item.action';
 export class CartAppComponent implements OnInit {
   items: CartItem[] = [];
 
-  total: number = 0;
   showCart: boolean = false; //variable para controlar si mostramos u ocultamos la vista del carro de compras
 
   constructor(
@@ -28,14 +27,16 @@ export class CartAppComponent implements OnInit {
   ) {
     this.store.select('items').subscribe((state) => {
       this.items = state.items;
-      this.total = state.total;
+      //this.total = state.total;
+      this.saveSession();
+      console.log('Cambio el estado');
     });
   }
 
   ngOnInit(): void {
     //this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
     // this.calculateTotal();
-
+    //this.store.dispatch(total());
     this.onDeleteCart();
     this.onAddCart();
   }
@@ -45,10 +46,8 @@ export class CartAppComponent implements OnInit {
       this.store.dispatch(add({ product }));
       this.store.dispatch(total());
       // this.calculateTotal();
-      this.saveSession();
-      this.router.navigate(['/cart'], {
-        state: { items: this.items, total: this.total },
-      });
+      // this.saveSession();
+      this.router.navigate(['/cart']);
       Swal.fire({
         title: 'Shoppingt cart',
         text: 'Nuevo producto agregado al carro',
@@ -78,13 +77,11 @@ export class CartAppComponent implements OnInit {
           //this.calculateTotal();
           this.store.dispatch(remove({ id }));
           this.store.dispatch(total());
-          this.saveSession();
+          //this.saveSession();
           this.router
             .navigateByUrl('/', { skipLocationChange: true })
             .then(() => {
-              this.router.navigate(['/cart'], {
-                state: { items: this.items, total: this.total },
-              });
+              this.router.navigate(['/cart']);
             });
 
           Swal.fire({
