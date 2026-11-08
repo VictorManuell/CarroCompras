@@ -26,7 +26,7 @@ export class CartComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.store.dispatch(total());
+   
   }
 
   onDeleteCart(id: number) {

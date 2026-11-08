@@ -1,6 +1,6 @@
-import { Product } from '../models/product';
+import { Product } from '../models/products';
 
-export const product: Product[] = [
+export const products: Product[] = [
   {
     id: 1,
     name: 'Teclado mecanico Asus RGB',
